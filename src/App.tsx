@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
-import data from "./large_generated_data_200k.json";
+import data from "./unique_40_companies_data_200k.json";
 import ProductAggregatedByYear from "./ProductAggregatedByYear";
 import Product from "./Product";
+import ProductAggregatedByCompany from "./ProductAggregatedByCompany";
 
 function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -46,15 +47,14 @@ function App() {
       <br />
       <hr />
       <h2>Aggregated by company</h2>
-      <ProductAggregatedByYear products={products} />
+      <ProductAggregatedByCompany products={products} />
       <br />
       <hr />
       <h2>Aggregated by status</h2>
-      <ProductAggregatedByYear products={products} />
+
       <br />
       <hr />
       <h2>Aggregated by owner</h2>
-      <ProductAggregatedByYear products={products} />
     </>
   );
 }
