@@ -1,6 +1,7 @@
 import Product from "./Product";
 import { BarDatum, ResponsiveBar } from "@nivo/bar";
 import _ from "lodash";
+import { useEffect, useState } from "react";
 
 interface ProductResponsiveBarData extends BarDatum {
   year: string;
@@ -15,14 +16,13 @@ interface ProductResponsiveBarData extends BarDatum {
 }
 
 function ProductBar({ products }: { products: Product[] }) {
-  const buildProductResponsiveBarData = (
-    products: Product[]
-  ): ProductResponsiveBarData[] => {
-    console.log("PRODUCTS", products.length);
-    console.log("PRODUCTS", products[0]);
+  const [transformedData, setTransformedData] = useState<
+    ProductResponsiveBarData[]
+  >([]);
 
+  const buildProductResponsiveBarData = (products: Product[]): void => {
     if (products.length === 0) {
-      return [];
+      return;
     }
 
     const groupByYear = _.groupBy(products, (product) =>
@@ -30,6 +30,8 @@ function ProductBar({ products }: { products: Product[] }) {
     );
     const data: ProductResponsiveBarData[] = [];
 
+    // It's important to keep it O(n^2) and limit how granullar and far Analytics can go
+    // Case that would go O(n^3) if we had to go further and group by year and month and priority
     for (const year in groupByYear) {
       const yearResult: ProductResponsiveBarData = {
         year,
@@ -55,27 +57,13 @@ function ProductBar({ products }: { products: Product[] }) {
       data.push(yearResult);
     }
 
-    console.log("OUTPUT", data);
-    return data;
+    setTransformedData(data);
   };
 
-  /*
-        "country": "AD",
-        "hot dog": 106,
-        "hot dogColor": "hsl(27, 70%, 50%)",
-        "burger": 53,
-        "burgerColor": "hsl(356, 70%, 50%)",
-        "sandwich": 66,
-        "sandwichColor": "hsl(57, 70%, 50%)",
-        "kebab": 162,
-        "kebabColor": "hsl(258, 70%, 50%)",
-        "fries": 122,
-        "friesColor": "hsl(291, 70%, 50%)",
-        "donut": 175,
-        "donutColor": "hsl(293, 70%, 50%)"
-
-        
-        */
+  useEffect(() => {
+    // Approach #1 - This is a heavy operation, so we should use a Web Worker
+    buildProductResponsiveBarData(products);
+  }, [products]);
 
   if (products.length === 0) {
     return "Loading...";
@@ -91,7 +79,7 @@ function ProductBar({ products }: { products: Product[] }) {
       }}
     >
       <ResponsiveBar
-        data={buildProductResponsiveBarData(products)}
+        data={transformedData}
         keys={["p1", "p2", "p3", "p4"]}
         indexBy="year"
         margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
