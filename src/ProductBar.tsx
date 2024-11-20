@@ -3,7 +3,7 @@ import { BarDatum, ResponsiveBar } from "@nivo/bar";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 
-interface ProductResponsiveBarData extends BarDatum {
+interface ProductPriorityAggregationPerYear extends BarDatum {
   year: string;
   p1: number;
   p1Color: string;
@@ -17,10 +17,12 @@ interface ProductResponsiveBarData extends BarDatum {
 
 function ProductBar({ products }: { products: Product[] }) {
   const [transformedData, setTransformedData] = useState<
-    ProductResponsiveBarData[]
+    ProductPriorityAggregationPerYear[]
   >([]);
 
-  const buildProductResponsiveBarData = (products: Product[]): void => {
+  const buildProductPriorityAggregationPerYear = (
+    products: Product[]
+  ): void => {
     if (products.length === 0) {
       return;
     }
@@ -28,12 +30,12 @@ function ProductBar({ products }: { products: Product[] }) {
     const groupByYear = _.groupBy(products, (product) =>
       new Date(product.created_at).getFullYear()
     );
-    const data: ProductResponsiveBarData[] = [];
+    const data: ProductPriorityAggregationPerYear[] = [];
 
     // It's important to keep it O(n^2) and limit how granullar and far Analytics can go
     // Case that would go O(n^3) if we had to go further and group by year and month and priority
     for (const year in groupByYear) {
-      const yearResult: ProductResponsiveBarData = {
+      const yearResult: ProductPriorityAggregationPerYear = {
         year,
         p1: 0,
         p1Color: "hsl(27, 70%, 50%)",
@@ -62,7 +64,7 @@ function ProductBar({ products }: { products: Product[] }) {
 
   useEffect(() => {
     // Approach #1 - This is a heavy operation, so we should use a Web Worker
-    buildProductResponsiveBarData(products);
+    buildProductPriorityAggregationPerYear(products);
   }, [products]);
 
   if (products.length === 0) {
