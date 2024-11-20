@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
-import data from "./unique_40_companies_data_200k.json";
+import data from "./unique_100_companies_data_200k.json";
 import ProductAggregatedByYear from "./ProductAggregatedByYear";
 import Product from "./Product";
 import ProductAggregatedByCompany from "./ProductAggregatedByCompany";
