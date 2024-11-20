@@ -15,7 +15,7 @@ interface ProductPriorityAggregationPerYear extends BarDatum {
   p4Color: string;
 }
 
-function ProductBar({ products }: { products: Product[] }) {
+function ProductAggregatedByYear({ products }: { products: Product[] }) {
   const [transformedData, setTransformedData] = useState<
     ProductPriorityAggregationPerYear[]
   >([]);
@@ -187,4 +187,4 @@ function ProductBar({ products }: { products: Product[] }) {
   );
 }
 
-export default ProductBar;
+export default ProductAggregatedByYear;

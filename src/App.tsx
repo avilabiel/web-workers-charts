@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import data from "./large_generated_data_200k.json";
-import ProductBar from "./ProductBar";
+import ProductAggregatedByYear from "./ProductAggregatedByYear";
 import Product from "./Product";
 
 function App() {
@@ -21,20 +21,40 @@ function App() {
     }, 5000);
   }, []);
 
-  // After 15s, perform a big change and just keep p1
   const onlyP1 = useCallback(() => {
     const newProducts = products.filter((product) => product.priority === "p1");
     setProducts(newProducts);
+  }, [products]);
+
+  const allPriorities = useCallback(() => {
+    getProducts().then((products) => {
+      setProducts(products);
+    });
   }, [products]);
 
   return (
     <>
       <h1>Charts with Web Workers</h1>
       <p>The following chart will be built using Web Workers</p>
-      <button onClick={onlyP1}>Click here to filter only by P1</button>
+      <button onClick={onlyP1}>Only by P1</button>
+      <button onClick={allPriorities}>All priorities</button>
       <br />
       <br />
-      <ProductBar products={products} />
+      <hr />
+      <h2>Aggregated by year</h2>
+      <ProductAggregatedByYear products={products} />
+      <br />
+      <hr />
+      <h2>Aggregated by company</h2>
+      <ProductAggregatedByYear products={products} />
+      <br />
+      <hr />
+      <h2>Aggregated by status</h2>
+      <ProductAggregatedByYear products={products} />
+      <br />
+      <hr />
+      <h2>Aggregated by owner</h2>
+      <ProductAggregatedByYear products={products} />
     </>
   );
 }
